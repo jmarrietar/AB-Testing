@@ -43,6 +43,10 @@ unique(Reservation_Data)
 Abandoned_Data_Clean<-Abandoned_Data[!duplicated(Abandoned_Data$Email),]
 Reservation_Data_Clean<-Reservation_Data[!duplicated(Reservation_Data$Email),]
 
+Email_matches<-Abandoned_Data_Clean$Email %in% Reservation_Data_Clean$Email
+Zipcode_matches<-Abandoned_Data_Clean$Zipcode %in% Reservation_Data_Clean$Zipcode
+
+length(Email_matches)
 
 #AB testing phase: 
 # I want to see if the Reservation rate for test group is higher than for control group. 
@@ -57,3 +61,6 @@ Reservation_Data_Clean<-Reservation_Data[!duplicated(Reservation_Data$Email),]
 #The t.test() function in R can quickly perform the statistical analysis and recognizes the greater than 30 sample size, thereby using the normal distribution.
 
 #Seria contar los que comprar test/ Total de los de Test y compraron control/ Total de control
+
+
+#NOTE: There is an ERROR in the submission checking. It says WRONG!: 
