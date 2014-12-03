@@ -8,3 +8,34 @@ setwd("C:/Users/Alfonso/Desktop/JOM/AB-Testing")
 
 Abandoned_Data<-read.csv("Abandoned_Data_Seed.csv",header=TRUE)
 Reservation_Data<-read.csv("Reservation_Data_Seed.csv",header=T)
+
+length(which(Reservation_Data$Test_Contro=='test'))
+
+#Every caller that abandoned their phone call to the call center 
+#was randomly split into test and control groups with an approximate 50/50 split.
+
+
+#The abandoned observations in the test group were then 
+#re-targeted with advertisements online for a period of 7 days.
+
+#The control group was never shown any advertisements.
+
+#How many more conversions (if any) occured in the test group?
+#Rta/ first determining the number of individuals whom exist in both datasets. This match indicates a caller who abandoned their
+#purchase but then came back and made a reservation.
+
+#If an Abandoned client made  a purchase then his mail will appear in the reservation data.
+#I create matches between emails. 
+Email_matches<-Abandoned_Data$Email %in% Reservation_Data$Email
+Zipcode_matches<-Abandoned_Data$Zipcode %in% Reservation_Data$Zipcode
+
+length(Email_matches)
+length(Zipcode_matches)
+
+#Data cleaning: 
+#The effectiveness of MightyHive's retargeting product is 
+#qualified only by the conversion of a customer the first time and not any additional reservations.
+
+#WE NEED TO REMOVE DUPLICATES!
+duplicates<-duplicated(class_data$A.Year)
+
