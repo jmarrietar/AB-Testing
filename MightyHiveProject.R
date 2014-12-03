@@ -36,6 +36,24 @@ length(Zipcode_matches)
 #The effectiveness of MightyHive's retargeting product is 
 #qualified only by the conversion of a customer the first time and not any additional reservations.
 
-#WE NEED TO REMOVE DUPLICATES!
-duplicates<-duplicated(class_data$A.Year)
+#WE NEED TO REMOVE DUPLICATE in Reservation Data. 
 
+# Original data with repeats removed. These do the same:
+unique(Reservation_Data)
+Abandoned_Data_Clean<-Abandoned_Data[!duplicated(Abandoned_Data$Email),]
+Reservation_Data_Clean<-Reservation_Data[!duplicated(Reservation_Data$Email),]
+
+
+#AB testing phase: 
+# I want to see if the Reservation rate for test group is higher than for control group. 
+#Difference between Reservation rates between test group and control group. 
+
+#If that is the case the the retargeting is sucessfull. 
+
+#Null hypothesis: the difference of Reservation rates between test group and control is equal to 0
+
+#Alternative hypothesis: the difference of Reservation rates between test group and control is greater than 0.
+#Sample size>30 the Z test. 
+#The t.test() function in R can quickly perform the statistical analysis and recognizes the greater than 30 sample size, thereby using the normal distribution.
+
+#Seria contar los que comprar test/ Total de los de Test y compraron control/ Total de control
