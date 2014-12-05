@@ -8,6 +8,18 @@ setwd("C:/Users/Alfonso/Desktop/JOM/AB-Testing")
 
 Abandoned_Data<-read.csv("Abandoned_Data_Seed.csv",header=TRUE)
 Reservation_Data<-read.csv("Reservation_Data_Seed.csv",header=T)
+###################################################################
+#################DATA WRANGLING PART ##############################
+###################################################################
+
+#Important
+#DIDNT WORK WITH %IN% command because NA values!!. 
+
+
+Email_matches<-Abandoned_Data$Email %in% Reservation_Data$Email
+Zipcode_matches<-Abandoned_Data$Zipcode %in% Reservation_Data$Zipcode
+length(Email_matches)
+length(Zipcode_matches)
 
 length(which(Reservation_Data$Test_Contro=='test'))
 
@@ -40,13 +52,20 @@ length(Zipcode_matches)
 
 # Original data with repeats removed. These do the same:
 unique(Reservation_Data)
-Abandoned_Data_Clean<-Abandoned_Data[!duplicated(Abandoned_Data$Email),]
-Reservation_Data_Clean<-Reservation_Data[!duplicated(Reservation_Data$Email),]
+Abandoned_Data_Clean<-Abandoned_Data[!duplicated(Abandoned_Data$Contact_Phone),]
+Reservation_Data_Clean<-Reservation_Data[!duplicated(Reservation_Data$Contact_Phone),]
 
 Email_matches<-Abandoned_Data_Clean$Email %in% Reservation_Data_Clean$Email
+Email_matches2<-Abandoned_Data$Email %in% Reservation_Data_Clean$Email
 Zipcode_matches<-Abandoned_Data_Clean$Zipcode %in% Reservation_Data_Clean$Zipcode
+Contact_Phone_matches<-Abandoned_Data_Clean$Contact_Phone %in% Reservation_Data_Clean$Contact_Phone
 
-length(Email_matches)
+length(Contact_Phone_matches)
+
+
+
+
+
 
 #AB testing phase: 
 # I want to see if the Reservation rate for test group is higher than for control group. 
@@ -64,3 +83,6 @@ length(Email_matches)
 
 
 #NOTE: There is an ERROR in the submission checking. It says WRONG!: 
+
+
+
