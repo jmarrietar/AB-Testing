@@ -6,8 +6,8 @@
 
 setwd("C:/Users/Alfonso/Desktop/JOM/AB-Testing")
 
-Abandoned_Data<-read.csv("Abandoned_Data_Seed.csv",header=TRUE)
-Reservation_Data<-read.csv("Reservation_Data_Seed.csv",header=T)
+Abandoned_Data<-read.csv("Abandoned_Data_Seed.csv",header=TRUE,na.strings = "")
+Reservation_Data<-read.csv("Reservation_Data_Seed.csv",header=T,na.strings = "")
 ###################################################################
 #################DATA WRANGLING PART ##############################
 ###################################################################
@@ -23,11 +23,19 @@ length(Email_matches)
 length(Zipcode_matches)
 #--------------------------------------------------------------------
 
-#Lets Try with Match function. 
+#Lets Try with Match function. --- Kind of Failed Again
 table(match(Abandoned_Data$Email, Reservation_Data$Email, nomatch = 0))
 sum((match(Abandoned_Data$Contact_Phone, Reservation_Data$Contact_Phone, nomatch = 0))>0)
 
-length(which(Reservation_Data$Test_Contro=='test'))
+#------------------------%In% funtion But removing NA values. 
+AData_Email<-Abandoned_Data$Email[!is.na(Abandoned_Data$Email)]
+RData_Email<-Reservation_Data$Email[!is.na(Reservation_Data$Email)]
+
+Email_matches<-AData_Email %in% RData_Email
+sum(Email_matches>0)
+#---------------------------------------------------------------
+
+
 
 #Every caller that abandoned their phone call to the call center 
 #was randomly split into test and control groups with an approximate 50/50 split.
