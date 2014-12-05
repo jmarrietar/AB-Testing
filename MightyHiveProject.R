@@ -14,12 +14,18 @@ Reservation_Data<-read.csv("Reservation_Data_Seed.csv",header=T)
 
 #Important
 #DIDNT WORK WITH %IN% command because NA values!!. 
+#I IMplemented MATCH() function insted. 
 
-
+#------------------ %in% function failed because of NA values in data set. 
 Email_matches<-Abandoned_Data$Email %in% Reservation_Data$Email
 Zipcode_matches<-Abandoned_Data$Zipcode %in% Reservation_Data$Zipcode
 length(Email_matches)
 length(Zipcode_matches)
+#--------------------------------------------------------------------
+
+#Lets Try with Match function. 
+table(match(Abandoned_Data$Email, Reservation_Data$Email, nomatch = 0))
+sum((match(Abandoned_Data$Contact_Phone, Reservation_Data$Contact_Phone, nomatch = 0))>0)
 
 length(which(Reservation_Data$Test_Contro=='test'))
 
@@ -38,11 +44,6 @@ length(which(Reservation_Data$Test_Contro=='test'))
 
 #If an Abandoned client made  a purchase then his mail will appear in the reservation data.
 #I create matches between emails. 
-Email_matches<-Abandoned_Data$Email %in% Reservation_Data$Email
-Zipcode_matches<-Abandoned_Data$Zipcode %in% Reservation_Data$Zipcode
-
-length(Email_matches)
-length(Zipcode_matches)
 
 #Data cleaning: 
 #The effectiveness of MightyHive's retargeting product is 
@@ -54,6 +55,8 @@ length(Zipcode_matches)
 unique(Reservation_Data)
 Abandoned_Data_Clean<-Abandoned_Data[!duplicated(Abandoned_Data$Contact_Phone),]
 Reservation_Data_Clean<-Reservation_Data[!duplicated(Reservation_Data$Contact_Phone),]
+
+
 
 Email_matches<-Abandoned_Data_Clean$Email %in% Reservation_Data_Clean$Email
 Email_matches2<-Abandoned_Data$Email %in% Reservation_Data_Clean$Email
