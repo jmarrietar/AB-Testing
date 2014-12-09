@@ -55,6 +55,7 @@ RData<-subset(Reservation_Data, !is.na(Incoming_Phone))
 Incoming_Phone_matches<-AData$Incoming_Phone %in% RData$Incoming_Phone
 sum(Incoming_Phone_matches>0)
 
+AData_Clean<-AData[Incoming_Phone_matches,]
 #How many more conversions (if any) occured in the test group?
 #Rta/ first determining the number of individuals whom exist in both datasets. This match indicates a caller who abandoned their
 #purchase but then came back and made a reservation.
@@ -69,10 +70,10 @@ sum(Incoming_Phone_matches>0)
 #WE NEED TO REMOVE DUPLICATE in Reservation Data. 
 
 # Original data with repeats removed. These do the same:
-unique(AData)
 
-AData_Clean<-AData[!duplicated(AData$Incoming_Phone),]
-RData_Clean<-RData[!duplicated(RData$Incoming_Phone),]
+
+AData_Clean_Unique<-AData_Clean[!duplicated(AData_Clean$Incoming_Phone),]
+AData_Unique<-unique(AData)
 
 ###################################################################
 ##################### AB TESTING PART #############################
@@ -95,12 +96,39 @@ RData_Clean<-RData[!duplicated(RData$Incoming_Phone),]
 #Sample size>30 the Z test. 
 #The t.test() function in R can quickly perform the statistical analysis and recognizes the greater than 30 sample size, thereby using the normal distribution.
 
-#Seria sacar los matches.(Test y control)
-#Seria contar los matches que sean test./ Total de los de Test(Bd original limpia)
-#Seria contar los matches que sean control./ Total de los de control(Bd original limpia)
-
+#Seria sacar los matches.(Test y control from clean Unique BD)
+test_obs<-sum(AData_Clean_Unique[,12]=="test")
+control_Obs<-sum(AData_Clean_Unique[,12]=="control")
+#Seria contar los matches que sean test./ Total de los de Test(Bd original limpia) TOTALES
+AData_total_test<-sum(AData_Unique[,12]=="test")
+AData_total_control<-sum(AData_Unique[,12]=="control")
+#Hacer la proporcion Ahora
+test_proportion<-test_obs/AData_total_test
+control_proportion<-control_Obs/AData_total_control
 #Hacer el estadistico de la forma Larga... es lo mejor
 
-#NOTE: There is an ERROR in the submission checking. It says WRONG!: 
+#What are the ods of getting this statistic again. 
+
+test_statistic<-test_proportion-control_proportion
+
+#Pooled proportion 
+
+pooled_proportion<-(sum(test_obs)+sum(control_Obs))/(AData_total_test+AData_total_control)
+#Standard error<- Variability of oru test statistic inits sampling distribution. 
+#This is the denominator or ecuation. 
+
+denominator=sqrt(pooled_proportion*(1-pooled_proportion)*((1/AData_total_test)+(1/AData_total_control)))
+
+Z=test_statistic/denominator
+
+#Z-score Is: 
+#How many standard deviations our observed test statistics
+#calculates assuming the null hypothesis is true. 
+
+#Pvalue
+#pnorm calculates the area under the normal curve to the right of our Z score. 
+p_value<-pnorm(Z,lower.tail=F)
+p_value
+
 
 

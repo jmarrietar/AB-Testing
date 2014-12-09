@@ -44,7 +44,7 @@ sum(conversion_data$a,na.rm=T)
 #control conversion. p1-p2
 
  #p1 p2 proportion of 1s in the two columns respectively. 
-a_obs<-na.omit(conversion_data$a)
+a_obs<-na.omit(conversion_data$a) 
 
 b_obs<-conversion_data$b
 
