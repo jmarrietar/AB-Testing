@@ -55,7 +55,9 @@ RData<-subset(Reservation_Data, !is.na(Incoming_Phone))
 Incoming_Phone_matches<-AData$Incoming_Phone %in% RData$Incoming_Phone
 sum(Incoming_Phone_matches>0)
 
+#Select only the matches from the data set
 AData_Clean<-AData[Incoming_Phone_matches,]
+
 #How many more conversions (if any) occured in the test group?
 #Rta/ first determining the number of individuals whom exist in both datasets. This match indicates a caller who abandoned their
 #purchase but then came back and made a reservation.
@@ -72,7 +74,12 @@ AData_Clean<-AData[Incoming_Phone_matches,]
 # Original data with repeats removed. These do the same:
 
 
+#Select only the matches from the data set
+AData_Clean<-AData[Incoming_Phone_matches,]
+
+#Now, We need to remove duplicated values from the Data base which the matches. 
 AData_Clean_Unique<-AData_Clean[!duplicated(AData_Clean$Incoming_Phone),]
+
 AData_Unique<-unique(AData)
 
 ###################################################################
@@ -96,16 +103,18 @@ AData_Unique<-unique(AData)
 #Sample size>30 the Z test. 
 #The t.test() function in R can quickly perform the statistical analysis and recognizes the greater than 30 sample size, thereby using the normal distribution.
 
-#Seria sacar los matches.(Test y control from clean Unique BD)
+
+#Count the number of matches with the label 'test' and 'control' respectively. (From Unique and Clean data base  of matches)
 test_obs<-sum(AData_Clean_Unique[,12]=="test")
 control_Obs<-sum(AData_Clean_Unique[,12]=="control")
-#Seria contar los matches que sean test./ Total de los de Test(Bd original limpia) TOTALES
+##Count the number of rows the label 'test' and 'control' respectively from Unique original Abandoned data.
 AData_total_test<-sum(AData_Unique[,12]=="test")
 AData_total_control<-sum(AData_Unique[,12]=="control")
-#Hacer la proporcion Ahora
+#Get proportion of the values above. 
 test_proportion<-test_obs/AData_total_test
 control_proportion<-control_Obs/AData_total_control
-#Hacer el estadistico de la forma Larga... es lo mejor
+
+#Get Z statistic
 
 #What are the ods of getting this statistic again. 
 
@@ -118,7 +127,7 @@ pooled_proportion<-(sum(test_obs)+sum(control_Obs))/(AData_total_test+AData_tota
 #This is the denominator or ecuation. 
 
 denominator=sqrt(pooled_proportion*(1-pooled_proportion)*((1/AData_total_test)+(1/AData_total_control)))
-
+SE=denominator
 Z=test_statistic/denominator
 
 #Z-score Is: 
@@ -130,5 +139,8 @@ Z=test_statistic/denominator
 p_value<-pnorm(Z,lower.tail=F)
 p_value
 
+#Confidence intervals. 
+upper_bound <- test_proportion - control_proportion + 1.96*SE
+lower_bound <- test_proportion - control_proportion - 1.96*SE
 
 
