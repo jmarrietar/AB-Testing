@@ -1,5 +1,5 @@
 quiz_class_data<-read.csv('classes_test.csv',header=TRUE)
-
+class_data<-read.csv('classes.csv',header=TRUE)
 #List of students that are not in both Classes
 
 my_vector<-c(1,2,3,4,5)
