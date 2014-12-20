@@ -78,8 +78,105 @@ AData_Unique <- unique(AData)
 
 
 
+## AB TESTING
+We need to know if there is a statistical difference between the persons that reserved from the test group and the ones from the control group.  We need an A/B Test. 
+
+If that is the case the the retargeting is sucessfull. 
+
+*Null hypothesis: the difference of Reservation rates between test group and control is equal to 0
+
+*Alternative hypothesis: the difference of Reservation rates between test group and control is greater than 0.
+
+
+```r
+# Count the number of matches with the label 'test' and 'control'
+# respectively. (From Unique and Clean data base of matches)
+test_obs <- sum(AData_Clean_Unique[, 12] == "test")
+control_Obs <- sum(AData_Clean_Unique[, 12] == "control")
+
+## Count the number of rows the label 'test' and 'control' respectively
+## from Unique original Abandoned data.
+AData_total_test <- sum(AData_Unique[, 12] == "test")
+AData_total_control <- sum(AData_Unique[, 12] == "control")
+```
+
+
+*Test Reservation rate = Matches with Test attribute / Total number of people in test group from  abandoned data. 
+*Control Reservation rate = Matches with control attribute / Total number of people in control  group from  abandoned data
+
+```r
+# Get proportion of the values above.
+test_proportion <- test_obs/AData_total_test
+control_proportion <- control_Obs/AData_total_control
+```
+
+
+*Get Z statistic
+A Z test would be appropriate Because Sample size>30.
+
+```r
+# What are the ods of getting this statistic again.
+test_statistic <- test_proportion - control_proportion
+
+# Pooled proportion
+pooled_proportion <- (sum(test_obs) + sum(control_Obs))/(AData_total_test + 
+    AData_total_control)
+# Standard error<- Variability of oru test statistic inits sampling
+# distribution.  This is the denominator or ecuation.
+
+denominator = sqrt(pooled_proportion * (1 - pooled_proportion) * ((1/AData_total_test) + 
+    (1/AData_total_control)))
+SE = denominator
+Z = test_statistic/denominator
+```
 
 
 
 
+*Z-score Is: 
+
+
+```r
+# How many standard deviations our observed test statistics calculates
+# assuming the null hypothesis is true.
+Z
+```
+
+```
+## [1] 10.17
+```
+
+
+Pvalue
+
+```r
+# pnorm calculates the area under the normal curve to the right of our Z
+# score.
+p_value <- pnorm(Z, lower.tail = F)
+p_value
+```
+
+```
+## [1] 1.324e-24
+```
+
+
+Confidence intervals. 
+
+```r
+upper_bound <- test_proportion - control_proportion + 1.96 * SE
+lower_bound <- test_proportion - control_proportion - 1.96 * SE
+```
+
+
+## Final observations
+
+* P value  1.324094e-24 almost zero , so there is very little chance to be wrong if we reject the null hypothesis. 
+* Therefore there is an difference of reservation rate between test group and control group. 
+-shortfalls: 
+* There are very blank spaces and NA values in the data sets. The db had to be  cleaned and get rid of a lot of rows.  
+* The same client might have called from different phones and might be counted twice. 
+
+## Conclusion 
+The retargeting strategy was sucessfull! . 
 

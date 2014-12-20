@@ -130,7 +130,7 @@ p_value
 Confidence intervals. 
 ```{r}
 upper_bound <- test_proportion - control_proportion + 1.96*SE
-lower_bound <- test_proportion -
+lower_bound <- test_proportion - control_proportion - 1.96*SE
 
 ```
 

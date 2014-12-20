@@ -247,6 +247,94 @@ AData_Clean_Unique &lt;- AData_Clean[!duplicated(AData_Clean$Incoming_Phone), ]
 AData_Unique &lt;- unique(AData)
 </code></pre>
 
+<h2>AB TESTING</h2>
+
+<p>We need to know if there is a statistical difference between the persons that reserved from the test group and the ones from the control group.  We need an A/B Test. </p>
+
+<p>If that is the case the the retargeting is sucessfull. </p>
+
+<p>*Null hypothesis: the difference of Reservation rates between test group and control is equal to 0</p>
+
+<p>*Alternative hypothesis: the difference of Reservation rates between test group and control is greater than 0.</p>
+
+<pre><code class="r"># Count the number of matches with the label &#39;test&#39; and &#39;control&#39;
+# respectively. (From Unique and Clean data base of matches)
+test_obs &lt;- sum(AData_Clean_Unique[, 12] == &quot;test&quot;)
+control_Obs &lt;- sum(AData_Clean_Unique[, 12] == &quot;control&quot;)
+
+## Count the number of rows the label &#39;test&#39; and &#39;control&#39; respectively
+## from Unique original Abandoned data.
+AData_total_test &lt;- sum(AData_Unique[, 12] == &quot;test&quot;)
+AData_total_control &lt;- sum(AData_Unique[, 12] == &quot;control&quot;)
+</code></pre>
+
+<p>*Test Reservation rate = Matches with Test attribute / Total number of people in test group from  abandoned data. 
+*Control Reservation rate = Matches with control attribute / Total number of people in control  group from  abandoned data</p>
+
+<pre><code class="r"># Get proportion of the values above.
+test_proportion &lt;- test_obs/AData_total_test
+control_proportion &lt;- control_Obs/AData_total_control
+</code></pre>
+
+<p>*Get Z statistic
+A Z test would be appropriate Because Sample size&gt;30.</p>
+
+<pre><code class="r"># What are the ods of getting this statistic again.
+test_statistic &lt;- test_proportion - control_proportion
+
+# Pooled proportion
+pooled_proportion &lt;- (sum(test_obs) + sum(control_Obs))/(AData_total_test + 
+    AData_total_control)
+# Standard error&lt;- Variability of oru test statistic inits sampling
+# distribution.  This is the denominator or ecuation.
+
+denominator = sqrt(pooled_proportion * (1 - pooled_proportion) * ((1/AData_total_test) + 
+    (1/AData_total_control)))
+SE = denominator
+Z = test_statistic/denominator
+</code></pre>
+
+<p>*Z-score Is: </p>
+
+<pre><code class="r"># How many standard deviations our observed test statistics calculates
+# assuming the null hypothesis is true.
+Z
+</code></pre>
+
+<pre><code>## [1] 10.17
+</code></pre>
+
+<p>Pvalue</p>
+
+<pre><code class="r"># pnorm calculates the area under the normal curve to the right of our Z
+# score.
+p_value &lt;- pnorm(Z, lower.tail = F)
+p_value
+</code></pre>
+
+<pre><code>## [1] 1.324e-24
+</code></pre>
+
+<p>Confidence intervals. </p>
+
+<pre><code class="r">upper_bound &lt;- test_proportion - control_proportion + 1.96 * SE
+lower_bound &lt;- test_proportion - control_proportion - 1.96 * SE
+</code></pre>
+
+<h2>Final observations</h2>
+
+<ul>
+<li>P value  1.324094e-24 almost zero , so there is very little chance to be wrong if we reject the null hypothesis. </li>
+<li>Therefore there is an difference of reservation rate between test group and control group. 
+-shortfalls: </li>
+<li>There are very blank spaces and NA values in the data sets. The db had to be  cleaned and get rid of a lot of rows.<br/></li>
+<li>The same client might have called from different phones and might be counted twice. </li>
+</ul>
+
+<h2>Conclusion</h2>
+
+<p>The retargeting strategy was sucessfull! . </p>
+
 </body>
 
 </html>
