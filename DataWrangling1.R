@@ -8,13 +8,17 @@ Delivery_Data<-read.csv("Delivery_Data_problem.csv",header=T,)
 #What is the most popular business in terms of delivery frequency?
 sort(table(Delivery_Data$pickup_name))
 
+#What is the zipcode of the most popular location for that business?
 Safeway<-subset(Delivery_Data, pickup_name=="Safeway")
-
 sort(table(Safeway$pickup_zipcode))
 
+#What is the second most popular business in terms of delivery frequency?
+#What is the zipcode of the most popular location for that business?
 Whole_Foods_Market<-subset(Delivery_Data, pickup_name=="Whole Foods Market")
-
 sort(table(Whole_Foods_Market$pickup_zipcode))
+
+Pizzeria_Delfina<-subset(Delivery_Data, pickup_name=="Pizzeria Delfina")
+sort(table(Pizzeria_Delfina$pickup_zipcode))
 
 colnames(Delivery_Data)
 #What is the average delivery duration time for customer ratings of 5? Round to a whole number.
@@ -39,3 +43,19 @@ mean(as.integer((Delivery_Data[Delivery_Data[,13]>0,])[,15]),na.rm=TRUE)
 
 mean(as.integer((Delivery_Data[Delivery_Data[,13]==0,])[,15]),na.rm=TRUE)
 
+######################################################################
+######################################################################
+
+#Using gsub() functions. 
+Delivery_Data$pickup_name<-gsub('Safeway','Safeway-H1',Delivery_Data$pickup_name,fixed=TRUE)
+Delivery_Data$pickup_name<-gsub('Whole Foods Market','Whole Foods Market-H2',Delivery_Data$pickup_name,fixed=TRUE)
+Delivery_Data$pickup_name<-gsub('Pizzeria Delfina','Pizzeria Delfina-H3',Delivery_Data$pickup_name,fixed=TRUE)
+
+#What is the total number of deliveries identified as coming from a 'hotspot' labeled business?
+Delivery_Data$pickup_name[grep('[[:alpha:]]+\\-+[H]+[[:digit:]]',Delivery_Data$pickup_name)]
+
+
+#Weekend late-night deliveries
+#These deliveries are defined as anytime between 11PM and 3:59AM on Fridays and Saturdays
+
+str(Delivery_Data$date_created_local)
