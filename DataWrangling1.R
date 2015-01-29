@@ -59,3 +59,6 @@ Delivery_Data$pickup_name[grep('[[:alpha:]]+\\-+[H]+[[:digit:]]',Delivery_Data$p
 #These deliveries are defined as anytime between 11PM and 3:59AM on Fridays and Saturdays
 
 str(Delivery_Data$date_created_local)
+
+mydate <- factor("2014-03-01 00:01:44.538420-08:00")
+
