@@ -5,6 +5,7 @@ setwd("C:/Users/Alfonso/Desktop/JOM/AB-Testing")
 
 Delivery_Data<-read.csv("Delivery_Data_problem.csv",header=T,)
 
+#What is the most popular business in terms of delivery frequency?
 sort(table(Delivery_Data$pickup_name))
 
 Safeway<-subset(Delivery_Data, pickup_name=="Safeway")
